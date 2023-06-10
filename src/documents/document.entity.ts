@@ -1,10 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class Document {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'longblob' })
-  file: Buffer;
+  @Column()
+  name: string;
+
+  @Column()
+  location: string;
+
+  @Column()
+  file: string;
 }

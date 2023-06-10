@@ -1,21 +1,23 @@
-import { Controller, Post, UseInterceptors, UploadedFile, Get, Param, Res } from '@nestjs/common';
+import { Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { DocumentsService } from './documents.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Document } from './document.entity';
 
 @Controller('documents')
 export class DocumentsController {
-  constructor(private readonly documentsService: DocumentsService) {}
+  constructor(
+    @InjectRepository(Document)
+    private readonly documentRepository: Repository<Document>,
+  ) {}
 
-  @Post('upload')
+  @Post()
   @UseInterceptors(FileInterceptor('file'))
-  async uploadDocument(@UploadedFile() file) {
-    return this.documentsService.saveDocument(file);
-  }
+  async uploadDocument(@UploadedFile() file): Promise<Document> {
+    const document = new Document();
+    document.name = file.originalname;
+    document.location = file.path;
 
-  @Get(':id')
-  async getDocument(@Param('id') id, @Res() res) {
-    const document = await this.documentsService.getDocumentById(id);
-    res.set('Content-Type', 'application/pdf');
-    res.send(document.file);
+    return this.documentRepository.save(document);
   }
 }
