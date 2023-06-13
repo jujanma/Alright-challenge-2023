@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { DocumentsController } from './documents/documents.controller';
 import { Document } from './documents/document.entity';
 import { UsersController } from './users/users.controller';
+import { NotificationService } from './notification/notification.service';
 
 @Module({
   imports: [
@@ -25,6 +26,6 @@ import { UsersController } from './users/users.controller';
     TypeOrmModule.forFeature([Document]),
   ],
   controllers: [AppController, DocumentsController, UsersController],
-  providers: [AppService],
+  providers: [AppService, NotificationService],
 })
 export class AppModule {}
